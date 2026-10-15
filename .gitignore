@@ -13,3 +13,7 @@ scripts/*.png
 .claude/
 .cursor/
 skills-lock.json
+
+# local guidance docs, kept out of the public repo
+PRODUCT.md
+DESIGN.md
