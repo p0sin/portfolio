@@ -1,0 +1,20 @@
+{
+  "name": "portfolio",
+  "type": "module",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "portrait": "node scripts/make-portrait.mjs"
+  },
+  "dependencies": {
+    "@fontsource/fragment-mono": "^5.3.0",
+    "@fontsource/instrument-serif": "^5.3.0",
+    "astro": "^7.4.0"
+  },
+  "devDependencies": {
+    "sharp": "^0.35.5"
+  }
+}

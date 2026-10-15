@@ -1,0 +1,15 @@
+node_modules
+dist
+.astro
+.DS_Store
+
+# local-only: source photo, visual references, original CV copy, tool state
+references/
+content/
+scripts/source/
+scripts/*.png
+.impeccable/
+.agents/
+.claude/
+.cursor/
+skills-lock.json

@@ -1,0 +1,4 @@
+---
+const { label } = Astro.props as { label?: string };
+---
+<div class="rule" aria-hidden="true">{label ? `+-- ${label} ` : '+'}{'-'.repeat(260)}</div>

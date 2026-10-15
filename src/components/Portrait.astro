@@ -1,0 +1,65 @@
+---
+import portrait from '../data/portrait.json';
+const { cols, rows, text, eyes } = portrait;
+---
+<figure class="portrait" style={`--cols:${cols};--rows:${rows}`} data-portrait>
+  <div class="portrait__stage" role="img" aria-label="ASCII-art portrait of Arturo Pulido. Its eyes follow the cursor.">
+    <!-- leading newline: the HTML parser drops the first one inside <pre>, which would shift every row up -->
+    <pre class="portrait__art" aria-hidden="true">{'\n' + text}</pre>
+    {Object.entries(eyes).map(([side, e]) => (
+      <span class="portrait__eye" aria-hidden="true" data-eye style={`--col:${e.col};--row:${e.row}`}><span class="portrait__pupil">@</span></span>
+    ))}
+  </div>
+</figure>
+
+<script>
+  const root = document.querySelector<HTMLElement>('[data-portrait]');
+  if (root) {
+    const stage = root.querySelector<HTMLElement>('.portrait__stage')!;
+    const art = root.querySelector<HTMLElement>('.portrait__art')!;
+    const eyes = [...root.querySelectorAll<HTMLElement>('[data-eye]')];
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // measure the real glyph advance so eye positions land on the right cell
+    const probe = document.createElement('span');
+    probe.textContent = 'M'.repeat(40);
+    probe.style.cssText = 'position:absolute;visibility:hidden;white-space:pre;font:inherit';
+    art.appendChild(probe);
+    const adv = probe.getBoundingClientRect().width / 40 / parseFloat(getComputedStyle(art).fontSize);
+    probe.remove();
+    if (adv > 0.3 && adv < 1) root.style.setProperty('--adv', String(adv));
+
+    // each pupil aims from its own socket, so a cursor sitting on an eye leaves that pupil centred
+    const state = eyes.map(() => ({ tx: 0, ty: 0, x: 0, y: 0 }));
+    let pointer: { x: number; y: number } | null = null;
+    let lastMove = 0;
+
+    addEventListener('pointermove', (e) => { lastMove = performance.now(); pointer = { x: e.clientX, y: e.clientY }; }, { passive: true });
+    document.addEventListener('pointerleave', () => { pointer = null; });
+
+    const frame = (t: number) => {
+      const wander = t - lastMove > 3500 || !pointer;
+      const reach = stage.getBoundingClientRect().width * 0.35; // distance at which the pupil hits its limit
+      eyes.forEach((el, i) => {
+        const s = state[i];
+        if (wander) {
+          s.tx = Math.sin(t / 2300) * 0.8;
+          s.ty = Math.sin(t / 3100 + 1) * 0.35;
+        } else {
+          const r = el.getBoundingClientRect();
+          const dx = pointer!.x - r.left, dy = pointer!.y - r.top;
+          const d = Math.hypot(dx, dy);
+          const k = Math.min(1, d / reach);
+          s.tx = d ? (dx / d) * k : 0;
+          s.ty = d ? (dy / d) * k : 0;
+        }
+        s.x += (s.tx - s.x) * 0.2;
+        s.y += (s.ty - s.y) * 0.2;
+        el.style.setProperty('--px', s.x.toFixed(3));
+        el.style.setProperty('--py', s.y.toFixed(3));
+      });
+      requestAnimationFrame(frame);
+    };
+    if (!reduced) requestAnimationFrame(frame);
+  }
+</script>

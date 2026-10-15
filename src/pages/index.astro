@@ -1,0 +1,134 @@
+---
+import Base from '../layouts/Base.astro';
+import Portrait from '../components/Portrait.astro';
+import Diagram from '../components/Diagram.astro';
+import Rule from '../components/Rule.astro';
+import { site, methodDiagram, agentDesign, skills, background } from '../data/site';
+import { work } from '../data/work';
+
+const description =
+  'AI Engineer designing LLM agents end to end: multi-agent systems, WhatsApp agents, n8n automation and full-stack integration.';
+---
+<Base title={`${site.name} — ${site.role}`} description={description}>
+  <a class="skip" href="#top">Skip to content</a>
+
+  <header class="top wrap">
+    <a class="top__name" href="#top">{site.name}</a>
+    <nav class="top__nav" aria-label="Primary">
+      <a href="#work">Work</a>
+      <a href="#method">Method</a>
+      <a href="#skills">Skills</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </header>
+
+  <main id="top">
+    <section class="hero wrap" aria-labelledby="hero-title">
+      <div class="hero__copy">
+        <h1 id="hero-title" class="hero__title">
+          <span class="hero__name">{site.name}</span>
+          <span class="hero__role">{site.role}</span>
+        </h1>
+        <p class="hero__statement">{site.statement}</p>
+        <p class="hero__actions">
+          <a class="btn btn--solid" href={site.cv} download>Download CV</a>
+          <a class="btn" href={`mailto:${site.email}`}>Email me</a>
+        </p>
+        <p class="hero__links">
+          <a href={site.linkedin} rel="me noopener">LinkedIn</a>
+          <a href={site.github} rel="me noopener">GitHub</a>
+          <span>{site.experience} · {site.location}</span>
+        </p>
+      </div>
+      <Portrait />
+    </section>
+
+    <section id="work" class="section wrap" aria-labelledby="work-title">
+      <Rule />
+      <h2 id="work-title">Selected work</h2>
+      <p class="section__lede">
+        Three production systems I designed, deployed and built at SENSO MX.
+      </p>
+      <div class="cases">
+        {work.map((c) => (
+          <article class="case" id={c.id}>
+            <div class="case__text">
+              <h3>{c.title}</h3>
+              <p class="case__summary">{c.summary}</p>
+              <ul class="case__points">
+                {c.points.map((p) => <li>{p}</li>)}
+              </ul>
+              <p class="case__stack">{c.stack}</p>
+            </div>
+            <Diagram art={c.diagram} label={c.diagramLabel} />
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <section id="method" class="section wrap" aria-labelledby="method-title">
+      <Rule />
+      <h2 id="method-title">How I work</h2>
+      <p class="section__lede">I own the full cycle: gathering client information, analyzing the options and designing the AI solution.</p>
+      <div class="method">
+        <Diagram art={methodDiagram} label="Three steps in order: gather and structure the client's information, analyze the options, then design the AI solution that fits that client." />
+        <div class="method__agents">
+          <h3>Designing an agent end to end</h3>
+          <ul class="ticks">
+            {agentDesign.map((a) => <li>{a}</li>)}
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="skills" class="section wrap" aria-labelledby="skills-title">
+      <Rule />
+      <h2 id="skills-title">Skills</h2>
+      <p class="section__lede">What I use to design, connect and ship agents.</p>
+      <dl class="skills">
+        {skills.map((g) => (
+          <div class="skills__row">
+            <dt>{g.group}</dt>
+            <dd>
+              <ul class="chips">
+                {g.items.map((i) => <li>{i}</li>)}
+              </ul>
+            </dd>
+          </div>
+        ))}
+      </dl>
+    </section>
+
+    <section id="background" class="section wrap" aria-labelledby="bg-title">
+      <Rule />
+      <h2 id="bg-title">Background</h2>
+      <dl class="skills skills--bg">
+        {background.map((r) => (
+          <div class="skills__row">
+            <dt>{r.label}</dt>
+            <dd>
+              <span class="bg__title">{r.title}</span>
+              {r.meta && <span class="bg__meta">{r.meta}</span>}
+            </dd>
+          </div>
+        ))}
+      </dl>
+    </section>
+
+    <section id="contact" class="section contact wrap" aria-labelledby="contact-title">
+      <Rule />
+      <h2 id="contact-title">Hiring for an AI engineering role? Write to me.</h2>
+      <p class="contact__mail"><a href={`mailto:${site.email}`}>{site.email}</a></p>
+      <p class="hero__actions">
+        <a class="btn btn--solid" href={site.cv} download>Download CV</a>
+        <a class="btn" href={site.linkedin} rel="me noopener">LinkedIn</a>
+        <a class="btn" href={site.github} rel="me noopener">GitHub</a>
+      </p>
+    </section>
+  </main>
+
+  <footer class="foot wrap">
+    <span>{site.name}</span>
+    <span>Built with Astro</span>
+  </footer>
+</Base>

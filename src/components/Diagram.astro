@@ -1,0 +1,20 @@
+---
+interface Props { art: string; label: string }
+const { art, label } = Astro.props;
+---
+<figure class="diagram">
+  <pre role="img" aria-label={label} data-diagram>{art}</pre>
+</figure>
+
+<script>
+  // a scrollable region needs a keyboard stop; one that fits does not
+  const sync = () => {
+    document.querySelectorAll<HTMLElement>('[data-diagram]').forEach((el) => {
+      if (el.scrollWidth > el.clientWidth + 1) el.tabIndex = 0;
+      else el.removeAttribute('tabindex');
+    });
+  };
+  sync();
+  addEventListener('resize', sync);
+  document.fonts?.ready.then(sync);
+</script>
