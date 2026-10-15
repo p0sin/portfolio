@@ -22,11 +22,11 @@ const grid = (img) => img
 // mask comes from the untouched photo (skin and hair are darker than the wall);
 // tone comes from a local-contrast pass so features survive inside the mask
 const { data: raw, info } = await grid(base().blur(2.5));
-const { data: tone } = await grid(base().clahe({ width: 4, height: 4, maxSlope: 2 }).sharpen({ sigma: 2, m1: 1.2, m2: 2 }).blur(0.9));
+const { data: tone } = await grid(base().sharpen({ sigma: 2, m1: 1.5, m2: 2 }).blur(0.6));
 
 const FG = 0.70; // original luminance below this is "subject"
-const LIGHT = 0.82, DARK = 0.12; // tone window, after local contrast
-const GAMMA = 0.85;
+const LIGHT = 0.72, DARK = 0.02; // tone window, after local contrast
+const GAMMA = 1.35;
 const HAIR = 0.22; // original luminance below this is hair: kept mid-dense so it reads as texture, not a block
 const eyeCell = (e) => ({
   col: ((e.x - CROP.left) / CROP.width) * COLS,
